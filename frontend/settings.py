@@ -25,7 +25,7 @@ RPC_PARAMS = {
         'port':9090
         }
 
-oocrpc.backend = oocrpc.RpcClient(**RPC_PARAMS)
+RPC = oocrpc.RpcClient(**RPC_PARAMS)
 
 REDIS_PARAMS = {
         'host':'localhost',
