@@ -3,16 +3,36 @@
 
 import os
 import sys
-
+import redis
+import socket
+from libshare import oocrpc
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+HOSTNAME = socket.gethostname()
 
 CURR_PATH=os.path.normpath(os.path.join(os.getcwd(),os.path.dirname(__file__)))
+
+sys.path.insert(0,CURR_PATH)
+
 
 ADMINS = (
     ('notedit', 'notedit@gmail.com'),
 )
+
+RPC_PARAMS = {
+        'host':'localhost',
+        'port':9090
+        }
+
+oocrpc.backend = oocrpc.RpcClient(**RPC_PARAMS)
+
+REDIS_PARAMS = {
+        'host':'localhost',
+        'port':6379
+        }
+
+RC = redis.Redis(**REDIS_PARAMS)
 
 MANAGERS = ADMINS
 
@@ -46,6 +66,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
         os.path.join(CURR_PATH,'static'),
 )
+
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -123,3 +144,5 @@ LOGGING = {
         },
     }
 }
+
+

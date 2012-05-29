@@ -14,8 +14,9 @@ import (
 )
 
 
-var port *uint = flag.Uint("port",9091,"the port the server will listen on")
+var port *uint = flag.Uint("port",9090,"the port the server will listen on")
 var host *string = flag.String("host","localhost","the host the server will listen on")
+
 
 func main() {
     flag.Parse()

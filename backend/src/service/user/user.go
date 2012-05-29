@@ -25,6 +25,8 @@ var SQL_CHECK_NICKNAME_LOWER string = "SELECT ukey,nickname FROM user_info WHERE
 var SQL_LOGIN_QUERY_UKEY string = "SELECT ukey,salt,password FROM passwd WHERE email=$1"
 var SQL_UPDATE_USERINFO string = "UPDATE user_info SET %s  WHERE ukey='%s'"
 var SQL_UPDATE_PASSWORD string = "UPDATE passwd SET salt=$1,password=$2 WHERE ukey=$3"
+var SQL_LOGIN_OAUTH string  = "SELECT ukey FROM user_alias where token_secret=$1 and oauth_token=$2"
+var SQL_BIND_OAUTH  string  = "INSERT INTO user_alias (ukey,atype,token_secret,oauth_token) VALUES ($1,$2,$3,$4)"
 
 type User struct {
     DB *sql.DB
@@ -252,14 +254,12 @@ func (u *User)SetUserInfo(arg *SetUserInfoArg,ukey *string)(err error){
             return
         }
     }
-    fmt.Println(arg.Ukey)
     var i int = 1
     var upPara []interface{}
     var upSQL []string
 
     for field,value := range arg.Info {
         if field == "nickname" {
-            fmt.Println(value.(string))
             if !u.checkNicknameLower(value.(string)) {
                 err = errors.New("NicknameError:nickname exist")
                 return
@@ -272,15 +272,11 @@ func (u *User)SetUserInfo(arg *SetUserInfoArg,ukey *string)(err error){
     
     upstr := strings.Join(upSQL,",")
     sql := fmt.Sprintf(SQL_UPDATE_USERINFO,upstr,arg.Ukey)
-    fmt.Println(sql)
-    fmt.Printf("%#v\n",upPara)
     r,err := u.DB.Exec(sql,upPara...)
     if err != nil {
-        fmt.Println(err.Error())
         err = errors.New("InternalError:"+err.Error())
         return
     }
-    fmt.Println("affected:")
     if n,err := r.RowsAffected(); n != 1 {
         err = errors.New("InternalError:update user error")
         return err
@@ -309,6 +305,58 @@ func (u *User)UpdatePassword(arg *UpdatePasswordArg,ukey *string) (err error){
     if err != nil {
         err = errors.New("InternalError:"+err.Error())
         return 
+    }
+    *ukey = arg.Ukey
+    return
+}
+
+// oauth2.0 
+type LoginOauthArg struct {
+    Token       string
+    AccessToken string
+}
+func (u *User)LoginOauth(arg *LoginOauthArg,ukey *string)(err error){
+    if len(arg.AccessToken) == 0 {
+        err = errors.New("OauthError:accesstoken is empty")
+        return
+    }
+    rows,err := u.DB.Query(SQL_LOGIN_OAUTH,arg.Token,arg.AccessToken)
+    if err != nil {
+        err = errors.New("InternalError:"+err.Error())
+        return
+    }
+    if !rows.Next() {
+        // does not exist
+        return
+    }
+    err = rows.Scan(ukey)
+    if err != nil {
+        err = errors.New("InternalError:"+err.Error())
+        return
+    }
+    return
+}
+
+// bind oauth
+type BindOauthArg struct {
+    Ukey        string
+    Token       string
+    AccessToken string
+    Atype        string
+}
+func (u *User)BindOauth(arg *BindOauthArg,ukey *string)(err error){
+    if len(arg.Ukey) == 0 {
+        err = errors.New("UkeyError:ukey is empty")
+        return
+    }
+    _,err = u.DB.Exec(SQL_BIND_OAUTH,arg.Ukey,arg.Atype,arg.Token,arg.AccessToken)
+    if err != nil {
+        if strings.Contains(err.Error(),"ukey_atype_key") {
+            err = errors.New("BindOauthError")
+            return err
+        }
+        err = errors.New("InternalError:"+err.Error())
+        return
     }
     *ukey = arg.Ukey
     return

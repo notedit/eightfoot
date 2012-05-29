@@ -7,10 +7,19 @@ import (
     "log"
     "strings"
     "database/sql"
+    "os/exec"
     "testing"
     _ "github.com/bmizerany/pq"
 )
 
+
+func TestSetup(t *testing.T) {
+    cmd := exec.Command("/bin/sh","-c","cd ../../../ && ./initdb.sh")
+    err := cmd.Run()
+    if err != nil {
+        t.Fatal("can not init the database, got error:"+err.Error())
+    }
+}
 
 func SetupUser() *User {
     db,err := sql.Open("postgres","sslmode=disable user=user port=5432 password=password dbname=database")
