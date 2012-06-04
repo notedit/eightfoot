@@ -100,5 +100,15 @@ func (t *Tag)DelOneTag(tagid *int,tid *int)(err error){
     return
 }
 
-
+// 获取最近有更新的标签
+type LatestUpdateTagArg struct {
+    Limit           int
+    Offset          int
+}
+type LatestUpdateTagRep struct {
+    Tag             []TagItem
+}
+func (t *Tag)GetLatestUpdateTag()(err error){
+    
+}
 
