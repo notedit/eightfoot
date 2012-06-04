@@ -29,7 +29,8 @@ RPC = oocrpc.RpcClient(**RPC_PARAMS)
 
 REDIS_PARAMS = {
         'host':'localhost',
-        'port':6379
+        'port':6379,
+        'db':0
         }
 
 RC = redis.Redis(**REDIS_PARAMS)
@@ -76,6 +77,9 @@ STATICFILES_FINDERS = (
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '3+zg8x9i&amp;%iyl#*lg1h%_n-w=x_a!ixwnrjf1q%szik84@j7qq'
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+SESSION_COOKIE_HTTPONLY = True
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (

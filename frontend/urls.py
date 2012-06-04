@@ -21,7 +21,7 @@ if settings.HOSTNAME in ('notedit'):
 
 
 urlpatterns += patterns('views.views_index',
-        url(r'^index/$','index'),
+        url(r'^$','index'),
         url(r'^test_rpc/$','test_rpc'),
         )
 
