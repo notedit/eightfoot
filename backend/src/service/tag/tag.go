@@ -108,7 +108,37 @@ type LatestUpdateTagArg struct {
 type LatestUpdateTagRep struct {
     Tag             []TagItem
 }
-func (t *Tag)GetLatestUpdateTag()(err error){
-    
+func (t *Tag)GetLatestUpdateTag(arg *LatestUpdateTagArg,rep *LatestUpdateTagRep)(err error){
+    rows,err := t.DB.Query(SQL_LATEST_UPDATE_TAG,arg.Limit,arg.Offset)
+    if err != nil {
+        err = errors.New("InternalError:"+err.Error())
+        return
+    }
+    for {
+        if rows.Next() {
+            var tag TagItem
+            err = rows.Scan(&tag.Id,
+                    &tag.Name,
+                    &tag.Introduction,
+                    &tag.DateCreate,
+                    &tag.ContentCount,
+                    &tag.FollowerCount,
+                    &tag.Show,
+                    &tag.AuthorUkey,
+                    &tag.UrlCode) 
+            if err != nil {
+                err = errors.New("InternalError:"+err.Error())
+                return err
+            }
+            rep.Tag.append(rep.Tag,tag)
+        } else {
+            break 
+        }
+    }
+    if rows.Err() != nil {
+        err = errors.New("InternalError:"+rows.Err().Error())
+        return
+    }
+    return
 }
 
