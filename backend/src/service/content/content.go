@@ -10,12 +10,15 @@ import (
     "errors"
     "strings"
     "database/sql"
+
+    "service/tag"
 )
 
-var SQL_GET_ONE_CONTENT string = "SELECT id,title,author_ukey,last_modify_ukey,last_reply_ukey,body,recommend_count,date_create,date_last_reply,show,disable_reply,tag_id FROM content WHERE id=$1 AND show=true"
-var SQL_ADD_ONE_CONTENT string = "INSERT INTO content (title,author_ukey,last_modify_ukey,last_reply_ukey,body,tag_id) VALUES ($1,$2,$3,$4,$5,$6)"
+var SQL_GET_ONE_CONTENT string = "SELECT id,title,author_ukey,last_modify_ukey,last_reply_ukey,body,recommend_count,date_create,date_last_reply,show,disable_reply FROM content WHERE id=$1 AND show=true"
+var SQL_ADD_ONE_CONTENT string = "INSERT INTO content (title,author_ukey,last_modify_ukey,last_reply_ukey,body) VALUES ($1,$2,$3,$4,$5)"
+var SQL_ADD_TAG_CONTENT string = ""
 var SQL_DEL_ONE_CONTENT string = "UPDATE content SET show=false WHERE id = $1"
-var SQL_LATEST_CONTENT string = "SELECT id,title,author_ukey,last_modify_ukey,last_reply_ukey,body,recommend_count,date_create,date_last_reply,show,disable_reply,tag_id FROM content WHERE %s ORDER BY date_create DESC LIMIT $1 OFFSET $2"
+var SQL_LATEST_CONTENT string = "SELECT id,title,author_ukey,last_modify_ukey,last_reply_ukey,body,recommend_count,date_create,date_last_reply,show,disable_reply FROM content WHERE %s ORDER BY date_create DESC LIMIT $1 OFFSET $2"
 
 
 type Content struct {
@@ -34,7 +37,7 @@ type ContentItem struct {
     DateLastReply   time.Time
     Show            bool
     DisableReply    bool
-    TagId           int
+    TagId           []int
 }
 
 func (c *Content)GetOneContent(cid *int,content *ContentItem)(err error){
@@ -61,8 +64,7 @@ func (c *Content)GetOneContent(cid *int,content *ContentItem)(err error){
                     &content.DateCreate,
                     &content.DateLastReply,
                     &content.Show,
-                    &content.DisableReply,
-                    &content.TagId)
+                    &content.DisableReply)
     if err != nil {
         err = errors.New("InternalError:"+err.Error())
         return
@@ -125,7 +127,7 @@ func (c *Content)AddOneContent(content *ContentItem,cid *int)(err error){
         return
     }
     r,err := c.DB.Exec(SQL_ADD_ONE_CONTENT,content.Title,content.AuthorUkey,content.LastModifyUkey,
-                        content.LastReplyUkey,content.Body,content.TagId)
+                        content.LastReplyUkey,content.Body)
     if err != nil {
         err = errors.New("InternalError:"+err.Error())
         return

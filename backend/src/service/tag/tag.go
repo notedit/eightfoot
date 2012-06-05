@@ -15,6 +15,10 @@ import (
 )
 
 var SQL_GET_ONE_TAG string = "SELECT id,name,introduction,date_create,content_count,follower_count,show,author_ukey,url_code from tag where id = $1 and show=true"
+var SQL_ADD_ONE_TAG string = "INSERT INTO tag (name,introduction,author_ukey,url_code) VALUES ($1,$2,$3,$4)"
+var SQL_DEL_ONE_TAG string = "UPDATE tag SET show=false WHERE id=$1"
+var SQL_LATEST_UPDATE_TAG string = "SELECT t.id,t.name,t.introduction,t.date_create,t.content_count,t.follower_count,t.show,t.author_ukey,t.url_code from tag AS t LEFT JOIN tag_map AS tm ON t.id = tm.tag_id WHERE 1=1 GROUP BY tm.tag_id ORDER BY tm.id DESC LIMIT $1 OFFSET $2"
+var SQL_GET_CONTENT_TAG string = "SELECT t.id,t.name,t.introduction,t.date_create,t.content_count,t.follower_count,t.show,t.author_ukey,t.url_code FROM tag AS t LEFT JOIN tag_map AS tm ON t.id = tm.tag_id WHERE tm.content_id = $1"
 
 
 type Tag struct {
@@ -142,3 +146,50 @@ func (t *Tag)GetLatestUpdateTag(arg *LatestUpdateTagArg,rep *LatestUpdateTagRep)
     return
 }
 
+// 获取内容的tag
+type GetContentTagRep struct {
+    Tag         []TagItem
+}
+func (t *Tag)GetContentTag(cid *int,rep *GetContentTagRep)(err error){
+    rows,err := t.DB.Query(SQL_GET_CONTENT_TAG,*cid)
+    if err != nil {
+        err = errors.New("InternalError:"+err.Error())
+        return
+    }
+    for {
+        if rows.Next() {
+            var tag TagItem
+            err = rows.Scan(&tag.Id,
+                            &tag.Name,
+                            &tag.Introduction,
+                            &tag.DateCreate,
+                            &tag.ContentCount,
+                            &tag.FollowerCount,
+                            &tag.Show,
+                            &tag.AuthorUkey,
+                            &tag.UrlCode)
+            if err != nil {
+                err = errors.New("InternalError:"+err.Error())
+                return err
+            }
+            rep.Tag.append(rep.Tag,tag)
+        } else {
+            break
+        }
+    }
+    if rows.Err() != nil {
+        err = errors.New("InternalError:"+rows.Err().Error())
+        return
+    }
+}
+
+// 保存内容的tag
+type SetContentTagArg struct {
+    ContentId   int
+    TagIds      []int
+    CreateDate  time.Time
+}
+func (t *Tag)SetContentTag(arg *SetContentTagArg,cid *int)(err error){
+
+
+}
