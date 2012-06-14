@@ -19,7 +19,8 @@ var SQL_ADD_ONE_TAG string = "INSERT INTO tag (name,introduction,author_ukey,url
 var SQL_DEL_ONE_TAG string = "UPDATE tag SET show=false WHERE id=$1"
 var SQL_LATEST_UPDATE_TAG string = "SELECT t.id,t.name,t.introduction,t.date_create,t.content_count,t.follower_count,t.show,t.author_ukey,t.url_code from tag AS t LEFT JOIN tag_map AS tm ON t.id = tm.tag_id WHERE 1=1 GROUP BY tm.tag_id ORDER BY tm.id DESC LIMIT $1 OFFSET $2"
 var SQL_GET_CONTENT_TAG string = "SELECT t.id,t.name,t.introduction,t.date_create,t.content_count,t.follower_count,t.show,t.author_ukey,t.url_code FROM tag AS t LEFT JOIN tag_map AS tm ON t.id = tm.tag_id WHERE tm.content_id = $1"
-
+var SQL_DEL_CONTENT_TAG string = "DELETE FROM tag_map WHERE content_id = $1"
+var SQL_IS_TAG_EXIST string = "SELECT id FROM tag WHERE name=$1"
 
 type Tag struct {
     DB *sql.DB
@@ -186,10 +187,33 @@ func (t *Tag)GetContentTag(cid *int,rep *GetContentTagRep)(err error){
 // 保存内容的tag
 type SetContentTagArg struct {
     ContentId   int
-    TagIds      []int
-    CreateDate  time.Time
+    TagName     []string
 }
 func (t *Tag)SetContentTag(arg *SetContentTagArg,cid *int)(err error){
-
-
+    if arg.ContentId == 0 {
+        err = errors.New("ParamError:contentid can not be 0")
+        return
+    }
+    if len(arg.TagName) == 0 {
+        *cid = arg.ContentId
+        return
+    }
+    // 删除掉tag_map 中的记录
+    _,err = t.DB.Exec(SQL_DEL_CONTENT_TAG,arg.ContentId)
+    // 查看有没有已经注册过
+    
+    tids := make(int,len(arg.TagName))
+    for i,n := range arg.TagName {
+        var tagid int
+        // to do to do
+        err = t.DB.QueryRow(SQL_IS_TAG_EXIST,n).Scan(&tagid)
+        if err != nil {
+            err = errors.New("InternalError:"+err.Error())
+            return err
+        }
+        if tagid == 0 {
+            // 这个标签不存在
+            
+        }
+    }
 }
