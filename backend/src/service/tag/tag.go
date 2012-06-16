@@ -21,6 +21,9 @@ var SQL_LATEST_UPDATE_TAG string = "SELECT t.id,t.name,t.introduction,t.date_cre
 var SQL_GET_CONTENT_TAG string = "SELECT t.id,t.name,t.introduction,t.date_create,t.content_count,t.follower_count,t.show,t.author_ukey,t.url_code FROM tag AS t LEFT JOIN tag_map AS tm ON t.id = tm.tag_id WHERE tm.content_id = $1"
 var SQL_DEL_CONTENT_TAG string = "DELETE FROM tag_map WHERE content_id = $1"
 var SQL_IS_TAG_EXIST string = "SELECT id FROM tag WHERE name=$1"
+var SQL_SIMPLE_TAG string = "SELECT id,name FROM tag WHERE id in (%s)"
+var SQL_ADD_ONE_TAG_RETURN_ID string = "INSERT INTO tag (name,introduction,author_ukey,url_code) VALUES ($1,$2,$3,$4) RETURNING id"
+var SQL_INSERT_TAG_MAP string = "INSERT INTO tag_map (tag_id,content_id) VALUES %s"
 
 type Tag struct {
     DB *sql.DB
@@ -200,9 +203,21 @@ func (t *Tag)SetContentTag(arg *SetContentTagArg,cid *int)(err error){
     }
     // 删除掉tag_map 中的记录
     _,err = t.DB.Exec(SQL_DEL_CONTENT_TAG,arg.ContentId)
-    // 查看有没有已经注册过
-    
-    tids := make(int,len(arg.TagName))
+    // 查看有没有已经注册过 注释掉的是一个优化方案(未完成)  先用最简单的方式实现
+    //upPara := make(interface{},len(arg.TagName))
+    //upSQL := make(string,len(arg.TagName))
+    //for i,n := range arg.TagName {
+    //    upSQL[i] = fmt.Sprintf("$%d",i)
+    //    upPara[i] = n
+    //    i += 1
+    //}
+    //sql := fmt.Sprintf(SQL_SIMPLE_TAG,strings.Join(upSQL,","))
+    //r,err := t.DB.Exec(sql,upPara...)
+    //if err != nil {
+    //    err = errors.New("InternalError:"+err.Error())
+    //    return
+    //}
+    tagids := make(int,len(arg.TagName))
     for i,n := range arg.TagName {
         var tagid int
         // to do to do
@@ -212,8 +227,31 @@ func (t *Tag)SetContentTag(arg *SetContentTagArg,cid *int)(err error){
             return err
         }
         if tagid == 0 {
-            // 这个标签不存在
-            
+            // 这个标签不存在 添加他
+            err = t.DB.QueryRow(SQL_ADD_ONE_TAG_RETURN_ID,n,"","","").Scan(&tagid)
+            if err != nil {
+                err = errors.New("InternalError:"+err.Error())
+                return err
+            }
+            // 在一次判断tagid
+            if tagid == 0 {
+                err = errors.New("InternalError:insert a tag error")
+                return err
+            }
         }
+        tagids[i] = tagid
     }
+    // 插入 tag_map
+    insertsql := make(string,len(tagids))
+    for i,n := range tagids {
+        insertsql[i] = fmt.Sprintf("(%d,%d)",n,content_id)
+    }
+    sql := fmt.Sprintf(SQL_INSERT_TAG_MAP,strings.Join(insertsql,","))
+    _,err = t.DB.Exec(sql)
+    if err != nil {
+        err = errors.New("InternalError:"+err.Error())
+    }
+    return
 }
+
+
