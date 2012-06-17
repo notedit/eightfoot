@@ -101,7 +101,7 @@ def all_user():
     print str(p)
 
 def all_tag(date_str):
-    t = insertModel({
+    t = insertModel('tag',{
         'name':strType,
         'introduction':strType,
         'date_create':strType,
@@ -117,7 +117,6 @@ def all_tag(date_str):
             'author_ukey':'user%02d' % idx,
             'url_code':''
             })
-    print str(t)
 
     for idx in xrange(101,200):
         t.append({
@@ -148,7 +147,6 @@ def all_content(date_str):
             'body':'this is a  beautiful body  body %02d' % idx,
             'date_create':time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(dt+idx*2))
             })
-    print str(c)
 
     for idx in xrange(100,200):
         c.append({
@@ -166,8 +164,15 @@ def all_tag_map():
         'tag_id':intType,
         'content_id':intType
         })
-    tagids = [i for i in xrange(1,100)]
-    for idx in xrange(1,200):
+    for idx in xrange(1,5):
+        tids = [1,2,3]
+        for tid in tids:
+            tm.append({
+                'tag_id':tid,
+                'content_id':idx
+                })
+    tagids = [i for i in xrange(1,20)]
+    for idx in xrange(5,200):
         tids = random.sample(tagids,3)
         for tid in tids:
             tm.append({
