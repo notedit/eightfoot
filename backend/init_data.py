@@ -71,7 +71,7 @@ def all_user():
         'introduction':strType,
         })
 
-    for idx in range(99):
+    for idx in xrange(0,99):
         u.append({
             'ukey': 'user%02d' % (idx+1),
             'nickname':'nick%02d' % (idx+1),
@@ -121,38 +121,63 @@ def all_tag(date_str):
 
     for idx in xrange(101,200):
         t.append({
-            
+            'name':'tagname%03d' % idx,
+            'introduction':'this is %03d' % idx,
+            'date_create':date_str,
+            'author_ukey':'user%02d' % (idx%9 + 1),
+            'url_code':''
             })
+    print str(t)
 
 def all_content(date_str):
+    dt=time.mktime(time.strptime(date_str,'%Y-%m-%d %H:%M:%S'))
     c = insertModel('content',{
         'title':strType,
         'author_ukey':strType,
         'last_modify_ukey':strType,
         'last_reply_ukey':strType,
         'body':strType,
+        'date_create':strType
         })
-    for idx in range(99):
+    for idx in xrange(1,100):
         c.append({
-            'title':'我们纷纷表示压力很大，title %02d' % (idx+1),
-            'author_ukey':'user%02d' % (idx+1),
-            'last_modify_ukey':'user%02d' % (idx+1),
-            'last_reply_ukey':'user%02d' % (idx+1),
-            'body':'this is a  beautiful body  body %02d' % (idx+1)
+            'title':'我们纷纷表示压力很大，title %02d' % idx,
+            'author_ukey':'user%02d' % idx,
+            'last_modify_ukey':'user%02d' % idx,
+            'last_reply_ukey':'user%02d' % idx,
+            'body':'this is a  beautiful body  body %02d' % idx,
+            'date_create':time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(dt+idx*2))
             })
     print str(c)
 
-    for idx in xrange(100,199):
+    for idx in xrange(100,200):
         c.append({
             'title':'我们纷纷表示压力很大，title %03d' % idx,
-            'author_ukey':'user%03d' % idx,
-            'last_modify_ukey':'user%03d' % idx,
-            'last_reply_ukey':'user%03d' % idx,
-            'body':'this is a  beautiful body  body %03d' % idx)
+            'author_ukey':'user%02d' % (idx-100) ,
+            'last_modify_ukey':'user%02d' % (idx-100),
+            'last_reply_ukey':'user%02d' % (idx-100),
+            'body':'this is a  beautiful body  body %03d' % idx,
+            'date_create':time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(dt+idx*2))
             })
     print str(c)
 
-
+def all_tag_map():
+    tm = insertModel('tag_map',{
+        'tag_id':intType,
+        'content_id':intType
+        })
+    tagids = [i for i in xrange(1,100)]
+    for idx in xrange(1,200):
+        tids = random.sample(tagids,3)
+        for tid in tids:
+            tm.append({
+                'tag_id':tid,
+                'content_id':idx
+            })
+    print str(tm)
 
 if __name__ == '__main__':
     all_user()
+    all_tag('2012-05-13 17:35:45')
+    all_content('2012-03-13 17:35:45')
+    all_tag_map()
