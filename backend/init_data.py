@@ -100,6 +100,59 @@ def all_user():
             })
     print str(p)
 
+def all_tag(date_str):
+    t = insertModel({
+        'name':strType,
+        'introduction':strType,
+        'date_create':strType,
+        'author_ukey':strType,
+        'url_code':strType
+        })
+
+    for idx in xrange(1,100):
+        t.append({
+            'name':'tagname%02d' % idx,
+            'introduction':'this is %02d' % idx,
+            'date_create':date_str,
+            'author_ukey':'user%02d' % idx,
+            'url_code':''
+            })
+    print str(t)
+
+    for idx in xrange(101,200):
+        t.append({
+            
+            })
+
+def all_content(date_str):
+    c = insertModel('content',{
+        'title':strType,
+        'author_ukey':strType,
+        'last_modify_ukey':strType,
+        'last_reply_ukey':strType,
+        'body':strType,
+        })
+    for idx in range(99):
+        c.append({
+            'title':'我们纷纷表示压力很大，title %02d' % (idx+1),
+            'author_ukey':'user%02d' % (idx+1),
+            'last_modify_ukey':'user%02d' % (idx+1),
+            'last_reply_ukey':'user%02d' % (idx+1),
+            'body':'this is a  beautiful body  body %02d' % (idx+1)
+            })
+    print str(c)
+
+    for idx in xrange(100,199):
+        c.append({
+            'title':'我们纷纷表示压力很大，title %03d' % idx,
+            'author_ukey':'user%03d' % idx,
+            'last_modify_ukey':'user%03d' % idx,
+            'last_reply_ukey':'user%03d' % idx,
+            'body':'this is a  beautiful body  body %03d' % idx)
+            })
+    print str(c)
+
+
 
 if __name__ == '__main__':
     all_user()
