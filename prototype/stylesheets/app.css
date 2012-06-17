@@ -1,0 +1,73 @@
+/* Foundation v2.2.1 http://foundation.zurb.com */
+/* Artfully masterminded by ZURB  */
+
+/* -------------------------------------------------- 
+   Table of Contents
+-----------------------------------------------------
+:: Shared Styles
+:: Page Name 1
+:: Page Name 2
+*/
+
+
+/* -----------------------------------------
+   Shared Styles
+----------------------------------------- */
+.topbar {
+	margin-bottom: 20px;
+	background: #000;
+	border-bottom: 5px solid #00A6FC;
+}
+.topbar h1 {
+	color: #FFF;
+}
+.topbar .nav-bar {
+	margin-bottom: 0;
+	border: none;
+	background: #000;
+}
+.topbar .nav-bar li {
+	padding: 0 20px;
+	border: none;
+}
+.topbar .nav-bar li a {
+	color: #FFF;
+}
+/* -----------------------------------------
+   index.html
+----------------------------------------- */
+.article {
+	padding-bottom: 5px;
+	border-bottom: 1px dashed #999;
+}
+.article p {
+	margin-bottom: 5px;
+}
+.article-meta a {
+	margin: 0 3px;
+}
+.article h2 {
+	font-size: 16px;
+	margin-bottom: 5px;
+}
+.article h2 a{
+	font-size: 16px;
+}
+.login-form .input-text {
+	width: 200px;
+}
+.login-form button {
+	margin-left: 50px;
+}
+.login-checkbox {
+	margin-top: 5px;
+}
+.login-forget {
+	line-height: 25px;
+}
+
+/* -----------------------------------------
+   Page Name 2
+----------------------------------------- */
+
+
