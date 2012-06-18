@@ -89,7 +89,7 @@ func (t *Tag)AddOneTag(tag *TagItem,tagid *int)(err error){
     }
     err = t.DB.QueryRow("SELECT lastval()").Scan(tagid)
     if err != nil {
-        err = errors.New("InternaleRROR:"+err.Error())
+        err = errors.New("InternalError:"+err.Error())
         return
     }
     return
