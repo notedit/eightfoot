@@ -88,4 +88,105 @@ func TestAddOneTag(t *testing.T) {
 	}
 
 	// NameError 
+	tagItem = TagItem{Name:"tagname01",Introduction:"Introduction",DateCreate:time.Now(),AuthorUkey:"user01",UrlCode:""}
+	tagid = 0 
+	err = tag.AddOneTag(&tagItem,&tagid)
+	if err == nil {
+		t.Error("AddOneTag: expect NameError got nil")
+	} else if !strings.Contains(err.Error(),"NameError") {
+		t.Errorf("AddOneTag: expect NameError got %v",err)
+	}
 }
+
+func TestDelOneTag(t *testing.T) {
+	tag := SetupTag()
+
+	// normal 
+	tagid := 50
+	var tid int
+	err := tag.DelOneTag(&tagid,&tid)
+	if err != nil {
+		t.Errorf("DelOneTag:expect nil got %v",err)
+	} else if tagid != tid {
+		t.Error("DelOneTag: can not del one tag")
+	}
+
+	// ParamError
+	tagid = -1
+	tid = 0
+	err = tag.DelOneTag(&tagid,&tid)
+	if err == nil {
+		t.Errorf("DelOneTag: expect ParamError got %v",err)
+	} else if !strings.Contains(err.Error(),"ParamError") {
+		t.Errorf("DelOneTag: expect ParamError got %v",err)
+	}
+}
+
+func TestGetLatestUpdateTag(t *testing.T) {
+	tag := SetupTag()
+
+	// normal 
+	arg := LatestUpdateTagArg{Limit:2,Offset:0}
+	rep := LatestUpdateTagRep{}
+	err := tag.GetLatestUpdateTag(&arg,&rep)
+	if err != nil {
+		t.Errorf("GetLatestUpdateTag: expect nil got %v",err)
+	} else if len(rep.Tag) != 2 {
+		t.Error("GetLatestUpdateTag: can not get normal result")
+	}
+
+	// ParamError 
+	arg = LatestUpdateTagArg{Limit:-1,Offset:0}
+	rep = LatestUpdateTagRep{}
+	err = tag.GetLatestUpdateTag(&arg,&rep)
+	if err == nil {
+		t.Errorf("GetLatestUpdateTag: expect ParamError got %v",err)
+	} else if !strings.Contains(err.Error(),"ParamError") {
+		t.Errorf("GetLatestUpdateTag: expect ParamError got %v",err)
+	}
+}
+
+func TestGetContentTag(t *testing.T) {
+	tag := SetupTag()
+
+	//normal 
+	cid := 2
+	rep := GetContentTagRep{}
+	err := tag.GetContentTag(&cid,&rep)
+	if err != nil {
+		t.Errorf("GetContentTag: expect nil got %v",err)
+	} else if len(rep.Tag) != 3 {
+		t.Error("GetContentTag: can not get correct result")
+	}
+}
+
+func TestSetContentTag(t *testing.T) {
+	tag := SetupTag()
+
+	// normal
+	tagname := []strings{"tag02","tag03","tag09","tag中文"}
+	arg := SetContentTagArg{ContentId:3,TagName:tagname}
+	var cid int
+	err := tag.SetContentTag(&arg,&cid)
+	if err != nil {
+		t.Errorf("SetContentTag: expect nil got %v",err)
+	} else if cid != arg.ContentId {
+		t.Errorf("SetContentTag: can not set the correct tag")
+	}
+
+	// ParamError
+	arg = SetContentTagArg{ContentId:-1,TagName:tagname}
+	cid = 0
+	err = tag.SetContentTag(&arg,&cid)
+	if err == nil {
+		t.Error("SetContentTag: expect ParamError got nil")
+	} else !strings.Contains(err.Error(),"ParamError") {
+		t.Errorf("SetContentTag: expect ParamError got %v",err)
+	}
+
+	
+}
+
+
+
+

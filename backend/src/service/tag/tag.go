@@ -117,6 +117,10 @@ type LatestUpdateTagRep struct {
     Tag             []TagItem
 }
 func (t *Tag)GetLatestUpdateTag(arg *LatestUpdateTagArg,rep *LatestUpdateTagRep)(err error){
+    if arg.Limit <= 0 {
+        err = errors.New("ParamError: the limit should > 0")
+        return
+    }
     rows,err := t.DB.Query(SQL_LATEST_UPDATE_TAG,arg.Limit,arg.Offset)
     if err != nil {
         err = errors.New("InternalError:"+err.Error())
