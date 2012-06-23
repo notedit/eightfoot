@@ -136,6 +136,8 @@ def all_content(date_str):
         'last_modify_ukey':strType,
         'last_reply_ukey':strType,
         'body':strType,
+        'url':strType,
+        'atype':strType,
         'date_create':strType
         })
     for idx in xrange(1,100):
@@ -145,6 +147,8 @@ def all_content(date_str):
             'last_modify_ukey':'user%02d' % idx,
             'last_reply_ukey':'user%02d' % idx,
             'body':'this is a  beautiful body  body %02d' % idx,
+            'url':'http://www.baidu.com',
+            'atype':'content',
             'date_create':time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(dt+idx*2))
             })
 
@@ -155,6 +159,8 @@ def all_content(date_str):
             'last_modify_ukey':'user%02d' % (idx-100),
             'last_reply_ukey':'user%02d' % (idx-100),
             'body':'this is a  beautiful body  body %03d' % idx,
+            'url':'http://www.baidu.com',
+            'atype':'content',
             'date_create':time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(dt+idx*2))
             })
     print str(c)

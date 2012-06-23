@@ -8,16 +8,13 @@ import (
     "fmt"
     "time"
     "errors"
-    "strings"
     "database/sql"
-
-    "service/tag"
 )
 
-var SQL_GET_ONE_CONTENT string = "SELECT id,title,author_ukey,last_modify_ukey,last_reply_ukey,body,recommend_count,date_create,date_last_reply,show,disable_reply FROM content WHERE id=$1 AND show=true"
-var SQL_ADD_ONE_CONTENT string = "INSERT INTO content (title,author_ukey,last_modify_ukey,last_reply_ukey,body) VALUES ($1,$2,$3,$4,$5) RETURNING id"
+var SQL_GET_ONE_CONTENT string = "SELECT id,title,author_ukey,last_modify_ukey,last_reply_ukey,body,url,atype,recommend_count,date_create,date_last_reply,show,disable_reply FROM content WHERE id=$1 AND show=true"
+var SQL_ADD_ONE_CONTENT string = "INSERT INTO content (title,author_ukey,last_modify_ukey,last_reply_ukey,body,url,atype) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING id"
 var SQL_DEL_ONE_CONTENT string = "UPDATE content SET show=false WHERE id = $1"
-var SQL_LATEST_CONTENT string = "SELECT c.id,c.title,c.author_ukey,c.last_modify_ukey,c.last_reply_ukey,c.body,c.recommend_count,c.date_create,c.date_last_reply,c.show,c.disable_reply FROM content AS c LEFT JOIN tag_map AS tm ON c.id = tm.content_id WHERE %s ORDER BY c.date_create DESC LIMIT $1 OFFSET $2"
+var SQL_LATEST_CONTENT string = "SELECT c.id,c.title,c.author_ukey,c.last_modify_ukey,c.last_reply_ukey,c.body,c.url,c.atype,c.recommend_count,c.date_create,c.date_last_reply,c.show,c.disable_reply FROM content AS c LEFT JOIN tag_map AS tm ON c.id = tm.content_id WHERE %s ORDER BY c.date_create DESC LIMIT $1 OFFSET $2"
 
 
 type Content struct {
@@ -31,6 +28,8 @@ type ContentItem struct {
     LastModifyUkey  string
     LastReplyUkey   string
     Body            string
+    Url             string
+    Atype           string
     RecommendCount  int
     DateCreate      time.Time
     DateLastReply   time.Time
@@ -60,6 +59,8 @@ func (c *Content)GetOneContent(cid *int,content *ContentItem)(err error){
                     &content.LastModifyUkey,
                     &content.LastReplyUkey,
                     &content.Body,
+                    &content.Url,
+                    &content.Atype,
                     &content.RecommendCount,
                     &content.DateCreate,
                     &content.DateLastReply,
@@ -78,15 +79,16 @@ type LatestContentArg struct {
     Limit           int
     TagId           int // 可以为0 为0的话取全部的
 }
-type LaestContentRep struct {
+type LatestContentRep struct {
     Content     []ContentItem
 }
 func (c *Content)GetLatestContent(arg *LatestContentArg,rep *LatestContentRep)(err error){
     tagstr := "1=1 "
     if arg.TagId != 0 {
-        tagstr = tagstr+fmt.Sprintf("tm.tag_id=%d ",arg.TagId)
+        tagstr = tagstr+fmt.Sprintf(" and tm.tag_id=%d ",arg.TagId)
     }
-    rows,err := c.DB.Query(fmt.Sprintf(SQL_LATEST_CONTENT,tagstr),arg.Offset,arg.Limit)
+    fmt.Printf(SQL_LATEST_CONTENT,tagstr)
+    rows,err := c.DB.Query(fmt.Sprintf(SQL_LATEST_CONTENT,tagstr),arg.Limit,arg.Offset)
     if err != nil {
         err = errors.New("InternalError:"+err.Error())
         return
@@ -97,13 +99,15 @@ func (c *Content)GetLatestContent(arg *LatestContentArg,rep *LatestContentRep)(e
     }
     for {
         if rows.Next() {
-            var conI ContentItm
+            var conI ContentItem
             err = rows.Scan(&conI.Id,
                             &conI.Title,
                             &conI.AuthorUkey,
                             &conI.LastModifyUkey,
                             &conI.LastReplyUkey,
                             &conI.Body,
+                            &conI.Url,
+                            &conI.Atype,
                             &conI.RecommendCount,
                             &conI.DateCreate,
                             &conI.DateLastReply,
@@ -112,7 +116,7 @@ func (c *Content)GetLatestContent(arg *LatestContentArg,rep *LatestContentRep)(e
             if err != nil {
                 return err
             }
-            rep.Content.append(rep.Content,conI)
+            rep.Content = append(rep.Content,conI)
         } else {
             break
         }
@@ -125,8 +129,8 @@ func (c *Content)AddOneContent(content *ContentItem,cid *int)(err error){
         err = errors.New("ParamError:content title should not be empty")
         return
     }
-    err := c.DB.QueryRow(SQL_ADD_ONE_CONTENT,content.Title,content.AuthorUkey,content.LastModifyUkey,
-                        content.LastReplyUkey,content.Body).Scan(cid)
+    err = c.DB.QueryRow(SQL_ADD_ONE_CONTENT,content.Title,content.AuthorUkey,content.LastModifyUkey,
+                        content.LastReplyUkey,content.Body,content.Url,content.Atype).Scan(cid)
     if err != nil {
         err = errors.New("InternalError:"+err.Error())
         return

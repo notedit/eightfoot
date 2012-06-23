@@ -10,14 +10,12 @@ import (
     "strings"
     "time"
     "database/sql"
-
-    "utils"
 )
 
 var SQL_GET_ONE_TAG string = "SELECT id,name,introduction,date_create,content_count,follower_count,show,author_ukey,url_code from tag where id = $1 and show=true"
 var SQL_ADD_ONE_TAG string = "INSERT INTO tag (name,introduction,author_ukey,url_code) VALUES ($1,$2,$3,$4)"
 var SQL_DEL_ONE_TAG string = "UPDATE tag SET show=false WHERE id=$1"
-var SQL_LATEST_UPDATE_TAG string = "SELECT t.id,t.name,t.introduction,t.date_create,t.content_count,t.follower_count,t.show,t.author_ukey,t.url_code from tag AS t LEFT JOIN tag_map AS tm ON t.id = tm.tag_id WHERE 1=1 GROUP BY tm.tag_id ORDER BY tm.id DESC LIMIT $1 OFFSET $2"
+var SQL_LATEST_UPDATE_TAG string = "SELECT t.id,t.name,t.introduction,t.date_create,t.content_count,t.follower_count,t.show,t.author_ukey,t.url_code from tag AS t WHERE t.id in (SELECT tm.tag_id from tag_map AS tm GROUP BY tm.tag_id ORDER BY t.date_create DESC LIMIT $1 OFFSET $2)"
 var SQL_GET_CONTENT_TAG string = "SELECT t.id,t.name,t.introduction,t.date_create,t.content_count,t.follower_count,t.show,t.author_ukey,t.url_code FROM tag AS t LEFT JOIN tag_map AS tm ON t.id = tm.tag_id WHERE tm.content_id = $1"
 var SQL_DEL_CONTENT_TAG string = "DELETE FROM tag_map WHERE content_id = $1"
 var SQL_IS_TAG_EXIST string = "SELECT id FROM tag WHERE name=$1"
@@ -78,7 +76,7 @@ func (t *Tag)AddOneTag(tag *TagItem,tagid *int)(err error){
         err = errors.New("ParamError: tag name should not be empty")
         return
     }
-    r,err := t.DB.Exec(SQL_ADD_ONE_TAG,tag.Name,tag.Introduction,tag.AuthorUkey,tag.UrlCode)
+    _,err = t.DB.Exec(SQL_ADD_ONE_TAG,tag.Name,tag.Introduction,tag.AuthorUkey,tag.UrlCode)
     if err != nil {
         if strings.Contains(err.Error(),"name_key") {
             err = fmt.Errorf("NameError: name %v dup",tag.Name)
@@ -142,7 +140,7 @@ func (t *Tag)GetLatestUpdateTag(arg *LatestUpdateTagArg,rep *LatestUpdateTagRep)
                 err = errors.New("InternalError:"+err.Error())
                 return err
             }
-            rep.Tag.append(rep.Tag,tag)
+            rep.Tag = append(rep.Tag,tag)
         } else {
             break 
         }
@@ -180,7 +178,7 @@ func (t *Tag)GetContentTag(cid *int,rep *GetContentTagRep)(err error){
                 err = errors.New("InternalError:"+err.Error())
                 return err
             }
-            rep.Tag.append(rep.Tag,tag)
+            rep.Tag = append(rep.Tag,tag)
         } else {
             break
         }
@@ -189,6 +187,7 @@ func (t *Tag)GetContentTag(cid *int,rep *GetContentTagRep)(err error){
         err = errors.New("InternalError:"+rows.Err().Error())
         return
     }
+    return
 }
 
 // 保存内容的tag
@@ -197,7 +196,7 @@ type SetContentTagArg struct {
     TagName     []string
 }
 func (t *Tag)SetContentTag(arg *SetContentTagArg,cid *int)(err error){
-    if arg.ContentId == 0 {
+    if arg.ContentId <= 0 {
         err = errors.New("ParamError:contentid can not be 0")
         return
     }
@@ -221,16 +220,13 @@ func (t *Tag)SetContentTag(arg *SetContentTagArg,cid *int)(err error){
     //    err = errors.New("InternalError:"+err.Error())
     //    return
     //}
-    tagids := make(int,len(arg.TagName))
+    tagids := make([]int,len(arg.TagName))
     for i,n := range arg.TagName {
         var tagid int
         // to do to do
+        fmt.Println(SQL_IS_TAG_EXIST)
         err = t.DB.QueryRow(SQL_IS_TAG_EXIST,n).Scan(&tagid)
         if err != nil {
-            err = errors.New("InternalError:"+err.Error())
-            return err
-        }
-        if tagid == 0 {
             // 这个标签不存在 添加他
             err = t.DB.QueryRow(SQL_ADD_ONE_TAG_RETURN_ID,n,"","","").Scan(&tagid)
             if err != nil {
@@ -246,15 +242,17 @@ func (t *Tag)SetContentTag(arg *SetContentTagArg,cid *int)(err error){
         tagids[i] = tagid
     }
     // 插入 tag_map
-    insertsql := make(string,len(tagids))
+    insertsql := make([]string,len(tagids))
     for i,n := range tagids {
-        insertsql[i] = fmt.Sprintf("(%d,%d)",n,content_id)
+        insertsql[i] = fmt.Sprintf("(%d,%d)",n,arg.ContentId)
     }
     sql := fmt.Sprintf(SQL_INSERT_TAG_MAP,strings.Join(insertsql,","))
     _,err = t.DB.Exec(sql)
     if err != nil {
         err = errors.New("InternalError:"+err.Error())
+        return
     }
+    *cid = arg.ContentId
     return
 }
 

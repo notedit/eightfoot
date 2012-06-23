@@ -9,6 +9,7 @@ import (
 	"database/sql"
 	"os/exec"
 	"testing"
+	"time"
 	_ "github.com/bmizerany/pq"
 )
 
@@ -38,7 +39,7 @@ func TestGetOneTag(t *testing.T) {
 	err := tag.GetOneTag(&tagid,&tagItem)
 	if err != nil {
 		t.Errorf("GetOneTag: expect nil got %v",err)
-	} else if tagItem.Id == tagid {
+	} else if tagItem.Id != tagid {
 		t.Error("GetOneTag: can not get the correct TagItem")
 	}
 
@@ -164,13 +165,15 @@ func TestSetContentTag(t *testing.T) {
 	tag := SetupTag()
 
 	// normal
-	tagname := []strings{"tag02","tag03","tag09","tag中文"}
+	tagname := []string{"tag02","tag03","tag09","tag中文"}
 	arg := SetContentTagArg{ContentId:3,TagName:tagname}
 	var cid int
 	err := tag.SetContentTag(&arg,&cid)
 	if err != nil {
 		t.Errorf("SetContentTag: expect nil got %v",err)
 	} else if cid != arg.ContentId {
+		t.Log(cid)
+		t.Log(arg.ContentId)
 		t.Errorf("SetContentTag: can not set the correct tag")
 	}
 
@@ -180,7 +183,7 @@ func TestSetContentTag(t *testing.T) {
 	err = tag.SetContentTag(&arg,&cid)
 	if err == nil {
 		t.Error("SetContentTag: expect ParamError got nil")
-	} else !strings.Contains(err.Error(),"ParamError") {
+	} else if !strings.Contains(err.Error(),"ParamError") {
 		t.Errorf("SetContentTag: expect ParamError got %v",err)
 	}
 

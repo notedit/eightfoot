@@ -9,6 +9,8 @@ import (
     "database/sql"
     "oocrpc/rpc"
     "service/user"
+    "service/content"
+    "service/tag"
     "service/test"
     _ "github.com/bmizerany/pq"
 )
@@ -26,6 +28,8 @@ func main() {
     }
     log.Println("backend server is starting...")
     server := rpc.NewServer(*host,*port)
+    server.Register(&tag.Tag{db})
+    server.Register(&content.Content{db})
     server.Register(&test.Test{db})
     server.Register(&user.User{db})
     log.Printf("backend listening %d\n",*port)

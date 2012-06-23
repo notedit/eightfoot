@@ -9,6 +9,7 @@ import (
 	"database/sql"
 	"os/exec"
 	"testing"
+    "time"
 	_ "github.com/bmizerany/pq"
 )
 
@@ -38,7 +39,7 @@ func TestGetOneContent(t *testing.T) {
 	err := content.GetOneContent(&content_id,&content_item)
 	if err != nil {
 		t.Errorf("GetOneContent: expect nil got %v",err)
-	} else if content_item.Id == 1 && content_item.AuthorUkey == "user01" {
+	} else if content_item.Id != 1 || content_item.AuthorUkey != "user01" {
 		t.Error("GetOneContent: contentItem's id  should be 1 ")
 	}
 
@@ -67,13 +68,13 @@ func TestGetLatestContent(t *testing.T) {
 	content := SetupContent()
 
 	// no Tagid
-	arg := LatestContentArg{Offset:0,Limit:10}
+	arg := LatestContentArg{Offset:0,Limit:1}
 	rep := LatestContentRep{}
 	err := content.GetLatestContent(&arg,&rep)
 	if err != nil {
 		t.Errorf("GetLatestContent:expect nil  got error %v",err)
-	} else if len(rep.Content) != 10 {
-		t.Error("GetLatestContent: can not get contentItem")
+	} else if len(rep.Content) != 1 {
+		t.Errorf("GetLatestContent: can not get contentItem,  %v",rep.Content)
 	} 
 	// have Tagid
 	arg = LatestContentArg{Offset:0,Limit:1,TagId:1}
@@ -97,6 +98,8 @@ func TestAddOneContent(t *testing.T) {
 								LastModifyUkey:"user01",
 								LastReplyUkey:"user01",
 								Body:"this is a body",
+								Url:"http://www.baidu.com",
+								Atype:"content",
 								DateCreate:time.Now()}
 	err := content.AddOneContent(&content_item,&cid)
 	if err != nil {
