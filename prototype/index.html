@@ -7,9 +7,10 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 <head>
 	<meta charset="utf-8" />
-
+	<meta name="author" content="Integ" />
+	<meta name="description" content="Index of EightFoot" />
 	<!-- Set the viewport width to device width for mobile -->
-	<meta name="viewport" content="width=device-width" />
+	<meta name="viewport" content="width=device-width; initial-scale=1.0" />
 
 	<title>Welcome to Eightfeet</title>
   
@@ -31,18 +32,18 @@
 </head>
 <body>
 	<!-- topbar -->
-	<div class="topbar">
+	<header class="topbar">
 		<div class="row">
-			<h1 class="six columns">EightFeet</h1>
-			<ul class="nav-bar six columns">
-				<li><a href="">主题</a></li>
-				<li><a href="">标签</a></li>
-				<li><a href="">浏览发现</a></li>
-				<li><a href="">插件</a></li>				
-				<li><a href="">知识树</a></li>
-			</ul>
+			<h1 class="six columns"><a href="index.html">EightFeet</a></h1>
+			<nav class="nav-bar six columns">
+				<a href="">主题</a>
+				<a href="tags.html">标签</a>
+				<a href="">浏览发现</a>
+				<a href="">插件</a>			
+				<a href="">知识树</a>
+			</nav>
 		</div>
-	</div>
+	</header>
 	<!-- container -->
 	<div class="container">
 		<div class="row">
@@ -123,20 +124,10 @@
 			</div>
 
 			<!-- side -->
-			<div class="four columns">
-				<!-- login-form -->
-				<div class="panel">
-					<form class="nice login-form">
-						<label for="checkbox1" class="login-checkbox right">
-							<input id="checkbox1" type="checkbox">记住我
-						</label>
-						<input type="text" class="input-text" placeholder="Email"/>
-						<a href="" class="login-forget right">忘记密码</a>
-						<input type="text" class="input-text" placeholder="Password"/>
-						<button class="nice small white radius button">注册</button>
-						<button class="nice small white radius button">登录</button>
-					</form>
-				</div>
+			<div class="four columns side">
+				<button id="regist" class="nice large white radius button">注册</button>
+				<button id="login"class="nice large white radius button">登录</button>
+
 				<div class="panel">
 					<p>八爪鱼是分享和发现精品内容的地方你在这里可以关注你感兴趣的标签在这里可以对已有内容进行评价可以借助浏览器插件进行一键分享</p>
 				</div>
@@ -181,12 +172,34 @@
 			</div>
 			<!-- End of side -->
 		</div>
-		<!-- row -->
+		<!-- End of row -->
 	</div>
-	<!-- container -->
+	<!-- End of container -->
 
+	<!-- footer -->
+	<footer class="footer">
+		<div class="row">
+			Powered by Turing 
+			<span class="right">Copyright © 2012 - EightFoot, All Rights Reserved</span>
+		</div>
+	</footer>
 
-
+	<!-- reveal -->
+	<div id="myModal1" class="reveal-modal login">
+		<img src="images/pic1.jpg" />
+		<form class="nice login-form right">
+			<span class="right login-checkbox">
+				<input id="checkbox" type="checkbox" />
+				<label for="checkbox">记住我</label>
+			</span>
+			<input type="text" class="input-text" placeholder="Email"/>				
+			<a href="" class="login-forget right">忘记密码</a>
+			<input type="text" class="input-text" placeholder="Password"/>
+			<button class="nice small white radius button">注册</button>
+			<button class="nice small white radius button">登录</button>
+		</form>
+     	<a class="close-reveal-modal">&#215;</a>
+	</div>
 
 	<!-- Included JS Files -->
 	<script src="javascripts/jquery.min.js"></script>

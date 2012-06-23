@@ -19,19 +19,29 @@
 	border-bottom: 5px solid #00A6FC;
 }
 .topbar h1 {
+	margin: 5px 0;
+	font-size: 35px;
+}
+.topbar h1 a {
 	color: #FFF;
 }
 .topbar .nav-bar {
-	margin-bottom: 0;
+	margin: 10px 0 0 0;
 	border: none;
 	background: #000;
 }
-.topbar .nav-bar li {
+.topbar .nav-bar a {
+	line-height: 45px;
 	padding: 0 20px;
 	border: none;
-}
-.topbar .nav-bar li a {
 	color: #FFF;
+}
+
+.footer {
+	margin-top: 20px;
+	line-height: 30px;
+	background: #000;
+	border-top: 3px solid #00A6FC;
 }
 /* -----------------------------------------
    index.html
@@ -50,8 +60,19 @@
 	font-size: 16px;
 	margin-bottom: 5px;
 }
-.article h2 a{
+.article h2 a {
 	font-size: 16px;
+}
+.article-info {
+	color: #999;
+}
+
+.side {
+	margin-top: 30px;
+}
+.login img {
+	width: 200px;
+	height: 200px;
 }
 .login-form .input-text {
 	width: 200px;
@@ -60,14 +81,38 @@
 	margin-left: 50px;
 }
 .login-checkbox {
-	margin-top: 5px;
+	margin: 4px 0 0 5px;
+}
+.login-checkbox input {
+	margin: 2px 0 0 0;
+}
+.login-checkbox label{
+	display: inline;
 }
 .login-forget {
 	line-height: 25px;
 }
 
 /* -----------------------------------------
-   Page Name 2
+   tags.html
 ----------------------------------------- */
-
-
+.tag h2 {
+	font-size: 14px;
+}
+.tag h2 a{
+	color: #333;
+	font-size: 14px;
+}
+.tag h2 a:hover {
+	color: #FFF;
+	background: #00A6FC;
+}
+.tag-intro {
+	margin: 8px 0;
+	height: 65px;
+	overflow: hidden;
+}
+.tag-meta {
+	margin-bottom: 0;
+	color: #999;
+}
