@@ -7,7 +7,7 @@ import (
     "flag"
     "log"
     "database/sql"
-    "oocrpc/rpc"
+    "msgpack-oocrpc/rpc"
     "service/user"
     "service/content"
     "service/tag"
