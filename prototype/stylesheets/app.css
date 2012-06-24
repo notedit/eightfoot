@@ -13,6 +13,9 @@
 /* -----------------------------------------
    Shared Styles
 ----------------------------------------- */
+.container {
+	min-height: 600px;
+}
 .topbar {
 	margin-bottom: 20px;
 	background: #000;
@@ -70,6 +73,10 @@
 .side {
 	margin-top: 30px;
 }
+.login-form {
+	margin-top: 30px;
+	width: 265px;
+}
 .login img {
 	width: 200px;
 	height: 200px;
@@ -115,4 +122,53 @@
 .tag-meta {
 	margin-bottom: 0;
 	color: #999;
+}
+
+/* -----------------------------------------
+   user.html
+----------------------------------------- */
+.user {
+	margin-bottom: 10px;
+}
+.user img {
+	width: 80px;
+	height: 80px;
+}
+.user-name {
+	font-size: 24px;
+	margin-left: 10px;
+}
+.user p {
+	margin: 10px 0 0 90px;
+}
+
+/* -----------------------------------------
+   share.html
+----------------------------------------- */
+.share-advice {
+	list-style: disc inside;
+}
+.share {
+	width: 538px;
+}
+.share-row {
+	margin-bottom: 20px;
+}
+.share-label {
+	display: inline-block;
+	width: 100px;
+}
+.share .share-text {
+	display: inline-block;
+}
+.share-mytags li{
+	float: left;
+	margin: 0 5px;
+}
+.share textarea {
+	margin-top: 0;
+	width: 438px;
+}
+.added {
+	background: 
 }

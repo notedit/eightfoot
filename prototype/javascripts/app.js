@@ -96,10 +96,3 @@ jQuery(document).ready(function ($) {
 	/* Gives elements with a class of 'disabled' a return: false; */
 
 });
-
-$(document).ready(function() {
-	$('#login').click(function(e) {
-		e.preventDefault();
-		$('#myModal1').reveal();
-	});
-});
