@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<title>Share-EightFoot</title>
+	<meta charset="utf-8" />
+	<meta name="author" content="Integ" />
+	<meta name="description" content="Share of EightFoot" />
+	<!-- Set the viewport width to device width for mobile -->
+	<meta name="viewport" content="width=device-width; initial-scale=1.0" />
+	<!-- Included CSS Files -->
+	<link rel="stylesheet" href="stylesheets/foundation.css">
+	<link rel="stylesheet" href="stylesheets/app.css">
+	<!-- Replace favicon.ico & apple-touch-icon.png in the root of your domain and delete these references -->
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+	<!--[if lt IE 9]>
+		<link rel="stylesheet" href="stylesheets/ie.css">
+	<![endif]-->
+	
+	<script src="javascripts/modernizr.foundation.js"></script>
+
+	<!-- IE Fix for HTML5 Tags -->
+	<!--[if lt IE 9]>
+		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+</head>
+
+<body>
+	<!-- topbar -->
+	<header class="topbar">
+		<div class="row">
+			<h1 class="six columns"><a href="index.html">EightFeet</a></h1>
+			<nav class="nav-bar six columns">
+				<a href="">主题</a>
+				<a href="tags.html">标签</a>
+				<a href="">浏览发现</a>
+				<a href="">插件</a>			
+				<a href="user.html">用户中心</a>
+			</nav>
+		</div>
+	</header>
+	
+	<div class="container">
+		<div class="row">
+			<div class="eight columns main">
+				<p>分享一个新的链接</p>
+				<form class="nice share">
+					<div class="row share-row">
+						<label for="shareTitle" class="share-label">主题</label>
+						<input id="shareTitle"type="text" class="large input-text share-text" placeholder="请输入能完整概括如下链接的文字" />
+					</div>
+					<div class="row share-row">
+						<label for="shareURL" class="share-label">链接URL</label>
+						<input id="shareURL" type="text" class="large input-text share-text" placeholder="请输入一个正确的url" />
+					</div>
+					<div class="row share-row">
+						<label for="shareTags" class="share-label">标签</label>
+						<div class="share-tags right">
+							<input id="shareTags" type="text" class="large input-text share-text" />
+							<p>我的标签：</p>
+							<ul id="myTags" class="share-mytags">
+								<li><a href="#" class="blue round label" title="互联网">互联网</a></li>
+								<li><a href="#" class="blue round label" title="创新">创新</a></li>
+								<li><a href="#" class="blue round label" title="下限">下限</a></li>
+								<li><a href="#" class="blue round label" title="节操">节操</a></li>
+								<li><a href="#" class="blue round label" title="爱心">爱心</a></li>
+								<li><a href="#" class="blue round label" title="喵星人">喵星人</a></li>
+								<li><a href="#" class="blue round label" title="汪星人">汪星人</a></li>
+							</ul>					
+						</div>
+					</div>
+					<div class="row share-row">
+						<label for="shareWords" class="share-label">推荐语</label>
+						<textarea id="shareWords" class="right" placeholder="how about love?"></textarea>
+					</div>
+					<input type="submit" class="nice blue radius button right" value="分享" />
+				</form>
+			</div>
+			
+			<div class="four columns side">
+				<div class="panel">
+					<p>分享建议：</p>
+					<ul class="share-advice">
+						<li>链接所指向的内容是有价值的</li>
+						<li>链接的内容最好是最新的</li>
+						<li>内容最好是和谐的</li>
+					</ul>
+				</div>
+				<div class="panel">
+					<p>八爪鱼是分享和发现精品内容的地方你在这里可以关注你感兴趣的标签在这里可以对已有内容进行评价可以借助浏览器插件进行一键分享</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- footer -->
+	<footer class="footer">
+		<div class="row">
+			Powered by Turing 
+			<span class="right">Copyright © 2012 - EightFoot, All Rights Reserved</span>
+		</div>
+	</footer>
+	<!-- Included JS Files -->
+	<script src="javascripts/jquery.min.js"></script>
+	<script src="javascripts/foundation.js"></script>
+	<script src="javascripts/share.js"></script>
+</body>
+</html>
