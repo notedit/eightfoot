@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+    <head>
+        <meta charset="UTF-8" />
+        {% block title %}
+
+        {% end %}
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7;IE=EmulateIE9" />
+
+        <link rel="stylesheet" href="stylesheets/foundation.css">
+        <link rel="stylesheet" href="stylesheets/app.css">
+        <!--[if lt IE 9]>
+        <link rel="stylesheet" href="stylesheets/ie.css">
+        <![endif]-->
+        <!-- IE Fix for HTML5 Tags -->
+        <!--[if lt IE 9]>
+            <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+        {% block headlinks %}
+        
+        {% end %}
+    </head>
+    <body>
+        {% include "navbar.html" %}
+        <div class="container">
+            {% block content %} {% end %}
+            {% include "footer.html"%}
+        </div>
+        <script src="javascripts/jquery.min.js"></script>
+        <script src="javascripts/foundation.js"></script>
+        <script src="javascripts/index.js"></script>
+        {% block js %}{% end %}
+    </body>
+</html>
