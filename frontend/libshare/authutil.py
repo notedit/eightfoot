@@ -3,10 +3,12 @@
 
 import time
 import hashlib
+import types
 from django.conf import settings
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.utils.http import cookie_date
+from django.utils import simplejson
 
 def set_logined(req,resp,ukey,timeout=None):
     if timeout is None:
@@ -48,3 +50,25 @@ def need_cookie_login(view_func):
         else:
             return HttpResponseRedirect('/login/?r=%s' % req.path)
 
+def api_error(errnum,errmsg):
+    assert type(errnum)==types.IntType
+    assert type(errmsg)==types.UnicodeType
+    retdict={
+            'errnum':errnum,
+            'errmsg':errmsg.encode('utf-8'),}
+    return HttpResponse(simplejson.dumps(retdict),status=406)
+
+
+def ajax_api(view_func):
+    def new_view_func(req,*args,**kwargs):
+        if not req.is_ajax():
+            return api_error(3,u'必需使用POST方法')
+        else:
+            return view_func(req,*args,**kwargs)
+    return new_view_func
+
+def is_logined(req):
+    if req.session.has_key('is_logined') and req.session['is_logined']==True:
+        return True
+    else:
+        return False
