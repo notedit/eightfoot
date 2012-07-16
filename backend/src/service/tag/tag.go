@@ -10,6 +10,8 @@ import (
     "strings"
     "time"
     "database/sql"
+
+    "utils"
 )
 
 var SQL_GET_ONE_TAG string = "SELECT id,name,introduction,date_create,content_count,follower_count,show,author_ukey,url_code from tag where id = $1 and show=true"
@@ -22,6 +24,8 @@ var SQL_IS_TAG_EXIST string = "SELECT id FROM tag WHERE name=$1"
 var SQL_SIMPLE_TAG string = "SELECT id,name FROM tag WHERE id in (%s)"
 var SQL_ADD_ONE_TAG_RETURN_ID string = "INSERT INTO tag (name,introduction,author_ukey,url_code) VALUES ($1,$2,$3,$4) RETURNING id"
 var SQL_INSERT_TAG_MAP string = "INSERT INTO tag_map (tag_id,content_id) VALUES %s"
+var SQL_GET_TAG_LIST string = "SELECT id,name,introduction,date_create,content_count,follower_count,show,author_ukey,url_code FROM tag WHERE show=true ORDER BY follower_count DESC Limit $1 Offset $2"
+var SQL_GET_TAG_COUNT string = "SELECT COUNT(id) FROM tag WHERE show=true"
 
 type Tag struct {
     DB *sql.DB
@@ -114,7 +118,7 @@ type LatestUpdateTagArg struct {
 type LatestUpdateTagRep struct {
     Tag             []TagItem
 }
-func (t *Tag)GetLatestUpdateTag(arg *LatestUpdateTagArg,rep *LatestUpdateTagRep)(err error){
+func (t *Tag)GetLatestUpdateTag(arg *LatestUpdateTagArg,tags *[]TagItem)(err error){
     if arg.Limit <= 0 {
         err = errors.New("ParamError: the limit should > 0")
         return
@@ -140,7 +144,7 @@ func (t *Tag)GetLatestUpdateTag(arg *LatestUpdateTagArg,rep *LatestUpdateTagRep)
                 err = errors.New("InternalError:"+err.Error())
                 return err
             }
-            rep.Tag = append(rep.Tag,tag)
+            *tags = append(*tags,tag)
         } else {
             break 
         }
@@ -156,7 +160,7 @@ func (t *Tag)GetLatestUpdateTag(arg *LatestUpdateTagArg,rep *LatestUpdateTagRep)
 type GetContentTagRep struct {
     Tag         []TagItem
 }
-func (t *Tag)GetContentTag(cid *int,rep *GetContentTagRep)(err error){
+func (t *Tag)GetContentTag(cid *int,tags *[]TagItem)(err error){
     rows,err := t.DB.Query(SQL_GET_CONTENT_TAG,*cid)
     if err != nil {
         err = errors.New("InternalError:"+err.Error())
@@ -178,7 +182,7 @@ func (t *Tag)GetContentTag(cid *int,rep *GetContentTagRep)(err error){
                 err = errors.New("InternalError:"+err.Error())
                 return err
             }
-            rep.Tag = append(rep.Tag,tag)
+            *tags = append(*tags,tag)
         } else {
             break
         }
@@ -255,5 +259,51 @@ func (t *Tag)SetContentTag(arg *SetContentTagArg,cid *int)(err error){
     *cid = arg.ContentId
     return
 }
+
+// 获取tag 的数量
+
+func (t *Tag)GetTagCount(_ *struct{},count *int)(err error){
+    err = t.DB.QueryRow(SQL_GET_TAG_COUNT).Scan(count)
+    if err != nil {
+        err = utils.InternalError(err)
+    }
+    return
+}
+
+
+// 标签列表页面
+type GetTagListArg struct{
+    Limit     int
+    Offset    int
+}
+func (t *Tag)GetTagList(arg *GetTagListArg,tags *[]TagItem)(err error){
+    rows,err := t.DB.Query(SQL_GET_TAG_LIST,arg.Limit,arg.Offset)
+    if err != nil {
+        err = utils.InternalError(err)
+        return
+    }
+    for rows.Next() {
+        var tag  TagItem
+        err = rows.Scan(&tag.Id,
+                        &tag.Name,
+                        &tag.Introduction,
+                        &tag.DateCreate,
+                        &tag.ContentCount,
+                        &tag.FollowerCount,
+                        &tag.Show,
+                        &tag.AuthorUkey,
+                        &tag.UrlCode)
+            if err != nil {
+                err = utils.InternalError(err)
+                return err
+            }
+            *tags = append(*tags,tag)
+    }
+    return
+}
+
+
+
+
 
 

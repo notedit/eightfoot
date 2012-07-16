@@ -173,12 +173,18 @@ class RpcClient(object):
         self.conn = Connection(self.host,self.port)
 
     def __getattr__(self,funcname):
-        func = lambda args:self.__call__(funcname,args)
+        func = lambda *args:self.__call__(funcname,*args)
         func.__name__ = funcname
         return func
 
-    def __call__(self,method,args):
-        self.conn.write_request(method,args)
+    def __call__(self,method,*args):
+        if len(args) > 1:
+            raise RpcError('method should only have one parameter')
+        elif len(args) == 0:
+            arg = {}
+        else:
+            arg = args[0]
+        self.conn.write_request(method,arg)
         res = self.conn.read_response()
         if res.error:
             raise RpcError(res.error)

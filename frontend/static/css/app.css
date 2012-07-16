@@ -1,0 +1,174 @@
+/* Foundation v2.2.1 http://foundation.zurb.com */
+/* Artfully masterminded by ZURB  */
+
+/* -------------------------------------------------- 
+   Table of Contents
+-----------------------------------------------------
+:: Shared Styles
+:: Page Name 1
+:: Page Name 2
+*/
+
+
+/* -----------------------------------------
+   Shared Styles
+----------------------------------------- */
+.container {
+	min-height: 600px;
+}
+.topbar {
+	margin-bottom: 20px;
+	background: #000;
+	border-bottom: 5px solid #00A6FC;
+}
+.topbar h1 {
+	margin: 5px 0;
+	font-size: 35px;
+}
+.topbar h1 a {
+	color: #FFF;
+}
+.topbar .nav-bar {
+	margin: 10px 0 0 0;
+	border: none;
+	background: #000;
+}
+.topbar .nav-bar a {
+	line-height: 45px;
+	padding: 0 20px;
+	border: none;
+	color: #FFF;
+}
+
+.footer {
+	margin-top: 20px;
+	line-height: 30px;
+	background: #000;
+	border-top: 3px solid #00A6FC;
+}
+/* -----------------------------------------
+   index.html
+----------------------------------------- */
+.article {
+	padding-bottom: 5px;
+	border-bottom: 1px dashed #999;
+}
+.article p {
+	margin-bottom: 5px;
+}
+.article-meta a {
+	margin: 0 3px;
+}
+.article h2 {
+	font-size: 16px;
+	margin-bottom: 5px;
+}
+.article h2 a {
+	font-size: 16px;
+}
+.article-info {
+	color: #999;
+}
+
+.side {
+	margin-top: 30px;
+}
+.login-form {
+	margin-top: 30px;
+	width: 265px;
+}
+.login img {
+	width: 200px;
+	height: 200px;
+}
+.login-form .input-text {
+	width: 200px;
+}
+.login-form button {
+	margin-left: 50px;
+}
+.login-checkbox {
+	margin: 4px 0 0 5px;
+}
+.login-checkbox input {
+	margin: 2px 0 0 0;
+}
+.login-checkbox label{
+	display: inline;
+}
+.login-forget {
+	line-height: 25px;
+}
+
+/* -----------------------------------------
+   tags.html
+----------------------------------------- */
+.tag h2 {
+	font-size: 14px;
+}
+.tag h2 a{
+	color: #333;
+	font-size: 14px;
+}
+.tag h2 a:hover {
+	color: #FFF;
+	background: #00A6FC;
+}
+.tag-intro {
+	margin: 8px 0;
+	height: 65px;
+	overflow: hidden;
+}
+.tag-meta {
+	margin-bottom: 0;
+	color: #999;
+}
+
+/* -----------------------------------------
+   user.html
+----------------------------------------- */
+.user {
+	margin-bottom: 10px;
+}
+.user img {
+	width: 80px;
+	height: 80px;
+}
+.user-name {
+	font-size: 24px;
+	margin-left: 10px;
+}
+.user p {
+	margin: 10px 0 0 90px;
+}
+
+/* -----------------------------------------
+   share.html
+----------------------------------------- */
+.share-advice {
+	list-style: disc inside;
+}
+.share {
+	width: 538px;
+}
+.share-row {
+	margin-bottom: 20px;
+}
+.share-label {
+	display: inline-block;
+	width: 100px;
+}
+.share .share-text {
+	display: inline-block;
+}
+.share-mytags li{
+	float: left;
+	margin: 0 5px;
+}
+.share textarea {
+	margin-top: 0;
+	width: 438px;
+}
+.added {
+	background: 
+}

@@ -89,7 +89,6 @@ def verify_nickname(req):
 	if form.is_valid():
 		nickname = form.cleaned_data['nickname']
 		try:
-			"backend-service"
 			ukey = oocrpc.backend.VerifyNickname(nickname.encode('utf-8'))
 		except oocrpc.RpcError,ex:
 			return authutil.api_error(500,u'服务器开小差了')

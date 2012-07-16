@@ -12,7 +12,7 @@ case $1 in
         kill -INT `cat $PIDFILE`
         ;;
     debug)
-        exec gunicorn_django --workers=2  --pid $PIDFILE
+        exec gunicorn_django --workers=3  --pid $PIDFILE
         ;;
     *)
         echo "Usage: ./ctlapp.sh start | stop | debug"

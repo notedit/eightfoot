@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% load fix_post %}
+
+{% block title %}
+
+{% endblock %}
+
+{% block headlinks %}
+<link rel="stylesheet" href=".">
+{% endblock %}
+
+{% block content %}
+	<!-- container -->
+	<div class="container">
+		<div class="row">
+			<div class="eight columns main">
+				<dl class="sub-nav">
+                    <dt>Filter:</dt>
+                    {% if is_logined %}
+                    <dd class="active"><a href="/">我关注的</a></dd>
+					<dd><a href="/index/latest/">最新的</a></dd>
+                    <dd><a href="/index/hotest/">最热门的</a></dd>
+                    {%else%}
+					<dd class="active"><a href="/index/latest/">最新的</a></dd>
+                    <dd><a href="/index/hotest/">最热门的</a></dd>
+                    {% endif %}
+				</dl>
+				<!-- articles -->
+				<ul class="articles">
+					{% for content in contents %}
+					<li class="article">
+						<a href="" class="article-like right">+喜欢</a>
+                        <h2><a href="">{{ content.Title }}</a></h2>
+						<p class="article-meta">标签：
+							<a href="" class="white round label">互联网</a>
+							<a href="" class="white round label">节操</a>
+							<a href="" class="white round label">下限</a>
+						</p>
+						<p>{{ content.Body }}</p>
+						<p class="article-info"><a href="">Integ</a>&nbsp; www.forbes.com &nbsp; {{ content.CreateDate|format_datetime }} &nbsp; <a href="">喜欢：{{ content.RecommendCount }}</a></p>
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
+
+			<!-- side -->
+			<div class="four columns side">
+				<button id="regist" class="nice large white radius button">注册</button>
+				<button id="login"class="nice large white radius button">登录</button>
+
+				<div class="panel">
+					<p>八爪鱼是分享和发现精品内容的地方你在这里可以关注你感兴趣的标签在这里可以对已有内容进行评价可以借助浏览器插件进行一键分享</p>
+				</div>
+
+				<div class="panel">
+					<ul class="disc">
+						<li><a href="">提交一个新的主题</a></li>
+						<li><a href="">设置你的个性化订阅 </a></li>
+					</ul>
+				</div>
+				
+				<div class="panel">
+					<p>标签</p>
+					<a href="" class="blue round label">互联网</a>
+					<a href="" class="blue round label">创新</a>
+					<a href="" class="blue round label">下限</a>
+					<a href="" class="blue round label">节操</a>
+					<a href="" class="blue round label">爱心</a>
+					<a href="" class="blue round label">喵星人</a>
+					<a href="" class="blue round label">汪星人</a>
+					<a href="" class="blue round label">不坑爹</a>
+					<a href="" class="blue round label">坑爹</a>
+					<a href="" class="blue round label">互联网</a>
+					<a href="" class="blue round label">创新</a>
+					<a href="" class="blue round label">下限</a>
+					<a href="" class="blue round label">节操</a>
+					<a href="" class="blue round label">爱心</a>
+					<a href="" class="blue round label">喵星人</a>
+					<a href="" class="blue round label">汪星人</a>
+					<a href="" class="blue round label">不坑爹</a>
+					<a href="" class="blue round label">坑爹</a>
+					<a href="" class="blue round label">互联网</a>
+					<a href="" class="blue round label">创新</a>
+					<a href="" class="blue round label">下限</a>
+					<a href="" class="blue round label">节操</a>
+					<a href="" class="blue round label">爱心</a>
+					<a href="" class="blue round label">喵星人</a>
+					<a href="" class="blue round label">汪星人</a>
+					<a href="" class="blue round label">不坑爹</a>
+					<a href="" class="blue round label">坑爹</a>
+				</div>
+			</div>
+			<!-- End of side -->
+		</div>
+		<!-- End of row -->
+	</div>
+	<!-- End of container -->
+
+	<!-- reveal -->
+	<div id="myModal1" class="reveal-modal login">
+		<img src="images/pic1.jpg" />
+		<form class="nice login-form right">
+			<span class="right login-checkbox">
+				<input id="checkbox" type="checkbox" />
+				<label for="checkbox">记住我</label>
+			</span>
+			<input type="text" class="input-text" placeholder="Email"/>				
+			<a href="" class="login-forget right">忘记密码</a>
+			<input type="text" class="input-text" placeholder="Password"/>
+			<button class="nice small white radius button">注册</button>
+			<input type="submit" class="nice small blue radius button" value="登录" />
+		</form>
+     	<a class="close-reveal-modal">&#215;</a>
+	</div>
+
+	<div id="myModal2" class="reveal-modal regist">
+		<form class="nice regist-form">
+			<input type="text" class="input-text" placeholder="Email" />
+			<input type="text" class="input-text" placeholder="密码" />
+			<input type="text" class="input-text" placeholder="昵称" />
+			<input type="submit" class="nice small blue radius button" value="注册" />
+		</form>
+		<a class="close-reveal-modal">&#215;</a>
+	</div>
+
+{% endblock %}
+
+{% block js %}
+<script src="/js/modernizr.foundation.js"></script>
+<script src="/js/index.js"></script>
+{% endblock %}

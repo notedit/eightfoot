@@ -187,8 +187,54 @@ def all_tag_map():
             })
     print str(tm)
 
+def all_recommend():
+    re = insertModel('recommend',{
+        'ukey':strType,
+        'object_type':strType,
+        'object_id':intType
+        })
+    for idx in xrange(1,20):
+        re.append({
+            'ukey':'user01',
+            'object_type':'post',
+            'object_id':idx,
+            })
+    for idx in xrange(20,40):
+        re.append({
+            'ukey':'user02',
+            'object_type':'post',
+            'object_id':idx,
+            })
+    for idx in xrange(40,60):
+        re.append({
+            'ukey':'user03',
+            'object_type':'post',
+            'object_id':idx,
+            })
+    for idx in xrange(60,80):
+        re.append({
+            'ukey':'user04',
+            'object_type':'post',
+            'object_id':idx,
+            })
+    for idx in xrange(80,100):
+        re.append({
+            'ukey':'user05',
+            'object_type':'post',
+            'object_id':idx,
+            })
+    for idx in xrange(100,200):
+        re.append({
+            'ukey':'user%2d' % (idx%50),
+            'object_type':'post',
+            'object_id':idx,
+            })
+    print str(re)
+
 if __name__ == '__main__':
     all_user()
     all_tag('2012-05-13 17:35:45')
     all_content('2012-03-13 17:35:45')
     all_tag_map()
+    all_recommend()
+

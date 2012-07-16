@@ -8,11 +8,11 @@
         <meta charset="UTF-8" />
         {% block title %}
 
-        {% end %}
+        {% endblock %}
         <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7;IE=EmulateIE9" />
 
-        <link rel="stylesheet" href="stylesheets/foundation.css">
-        <link rel="stylesheet" href="stylesheets/app.css">
+        <link rel="stylesheet" href="/css/foundation.css">
+        <link rel="stylesheet" href="/css/app.css">
         <!--[if lt IE 9]>
         <link rel="stylesheet" href="stylesheets/ie.css">
         <![endif]-->
@@ -22,17 +22,14 @@
         <![endif]-->
         {% block headlinks %}
         
-        {% end %}
+        {% endblock %}
     </head>
     <body>
-        {% include "navbar.html" %}
-        <div class="container">
-            {% block content %} {% end %}
-            {% include "footer.html"%}
-        </div>
-        <script src="javascripts/jquery.min.js"></script>
-        <script src="javascripts/foundation.js"></script>
-        <script src="javascripts/index.js"></script>
-        {% block js %}{% end %}
+        {% include "header.html" %}
+        {% block content %} {% endblock %}
+        {% include "footer.html"%}
+        <script src="/js/jquery.min.js"></script>
+        <script src="/js/foundation.js"></script>
+        {% block js %}{% endblock %}
     </body>
 </html>

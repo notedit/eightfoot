@@ -121,3 +121,55 @@ func TestDelOneContent(t *testing.T) {
 		t.Error("DelOneContent: cid should be equail with the rcid")
 	} 
 }
+
+func TestGetFollowContentCount(t *testing.T){
+	content := SetupContent()
+
+	ukey := "user05"
+	followCount := 0
+	err := content.GetFollowContentCount(&ukey,&followCount)
+	if err != nil {
+		t.Errorf("GetFollowContentCount: expect nil got %v",err)
+	} else if followCount <= 0 {
+		t.Error("GetFollowContentCount: followCount should be > 0")
+	}
+}
+
+func TestGetFollowContent(t *testing.T){
+	content := SetupContent()
+
+	arg := GetFollowContentArg{Ukey:"user05",Limit:1,Offset:0}
+	var cons []ContentItem
+	err := content.GetFollowContent(&arg,&cons)
+	if err != nil {
+		t.Errorf("GetFollowContent: expect nil got %v",err)
+	} else if len(cons) != 1 {
+		t.Errorf("GetFollowContent: expect cons's length == 1, got %v",len(cons))
+	}
+}
+
+func TestGetContentCount(t *testing.T){
+	content := SetupContent()
+
+	var count int 
+	var nilstruct struct{}
+	err := content.GetContentCount(&nilstruct,&count)
+	if err != nil {
+		t.Errorf("GetContentCount: expect nil got %v",err)
+	} else if count <= 0 {
+		t.Errorf("GetContentCount: can not get content count")
+	}
+}
+
+func TestGetLatestContent(t *testing.T) {
+	content := SetupContent()
+
+	arg := GetLatestContentArg{Offset:0,Limit:1}
+	var cons []ContentItem
+	err := content.GetLatestContent(&arg,&cons)
+	if err != nil {
+		t.Errorf("GetLatestContent: expect nil got %v",err)
+	} else if len(cons) != 1 {
+		t.Errorf("GetLatestContent: can not get correct content")
+	}
+}

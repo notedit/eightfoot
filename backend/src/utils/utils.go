@@ -5,6 +5,7 @@
 package utils
 
 import (
+    "errors"
     "strings"
     "strconv"
     "math/rand"
@@ -91,4 +92,9 @@ func HexBuffer2(input string) string {
         copy(payload[j:j+4], `\x`+string(hexdump[k:k+2]))
     }
     return string(output)
+}
+
+func InternalError(err error) error {
+    err = errors.New("InternalError"+err.Error())
+    return err
 }

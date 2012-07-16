@@ -27,6 +27,8 @@ var SQL_UPDATE_USERINFO string = "UPDATE user_info SET %s  WHERE ukey='%s'"
 var SQL_UPDATE_PASSWORD string = "UPDATE passwd SET salt=$1,password=$2 WHERE ukey=$3"
 var SQL_LOGIN_OAUTH string  = "SELECT ukey FROM user_alias where token_secret=$1 and oauth_token=$2"
 var SQL_BIND_OAUTH  string  = "INSERT INTO user_alias (ukey,atype,token_secret,oauth_token) VALUES ($1,$2,$3,$4)"
+var SQL_VERIFY_NICKNAME string = "SELECT ukey FROM user_info WHERE lower(nickname) = $1"
+var SQL_VERIFY_EMAIL string = "SELECT ukey FROM passwd WHERE email = $1"
 
 type User struct {
     DB *sql.DB
@@ -360,6 +362,31 @@ func (u *User)BindOauth(arg *BindOauthArg,ukey *string)(err error){
     }
     *ukey = arg.Ukey
     return
+}
+
+
+func (u *User)VerifyNickname(nickname *string,ukey *string)(err error){
+    if len(*nickname) == 0 {
+        err = errors.New("NicknameError:VerifyNickname nickname could not be empty string")
+        return
+    }
+    err = u.DB.QueryRow(SQL_VERIFY_NICKNAME,*nickname).Scan(ukey)
+    if err != nil {
+        *ukey,err = "",nil
+    }
+    return
+}
+
+func (u *User)VerifyEmail(email *string,ukey *string)(err error){
+    if len(*email) == 0 {
+        err = errors.New("EmailError: VerifyEmail email could not be empty string")
+        return
+    }
+    err = u.DB.QueryRow(SQL_VERIFY_EMAIL,*email).Scan(ukey)
+    if err != nil {
+        *ukey,err = "",nil
+    }
+	return
 }
 
 // 生成一个安全的token, 用于验证邮箱 或者找回密码的验证
